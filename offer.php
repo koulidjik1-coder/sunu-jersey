@@ -35,16 +35,23 @@ $theme = getActiveTheme($pdo);
             --secondary: <?php echo $theme['color_secondary']; ?>;
         }
         .offer-detail { padding: 40px 0; }
-        .offer-hero { background: url('uploads/<?php echo htmlspecialchars($offer['background_path']); ?>') center/cover; color: white; padding: 80px 20px; text-align: center; border-radius: 10px; margin-bottom: 40px; }
-        .offer-hero h1 { font-size: 36px; margin-bottom: 20px; }
+        .offer-hero { background: url('uploads/<?php echo htmlspecialchars($offer['background_path']); ?>') center/cover; color: white; padding: 80px 20px; text-align: center; border-radius: 10px; position: relative; }
+        .offer-hero::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.3); border-radius: 10px; }
+        .offer-hero h1 { font-size: 36px; margin-bottom: 20px; position: relative; z-index: 1; }
+        .offer-hero p { position: relative; z-index: 1; }
         .product-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .product-images img { width: 100%; height: auto; border-radius: 10px; object-fit: contain; }
+        .product-images #main-image { height: 500px; object-fit: contain; background: #f9f9f9; }
+        .thumbnail-gallery { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        .thumbnail-gallery img { width: 80px; height: 80px; object-fit: contain; background: #f9f9f9; border-radius: 5px; cursor: pointer; border: 2px solid transparent; transition: all 0.3s; }
+        .thumbnail-gallery img:hover { border-color: var(--primary); }
         @media (max-width: 768px) { .product-detail { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="container">
-            <a href="index.php" style="color: white; text-decoration: none; font-size: 24px;">← SUNU</a>
+            <a href="index.php" style="color: white; text-decoration: none; font-size: 24px;">← Accueil</a>
         </div>
     </header>
 
@@ -60,11 +67,11 @@ $theme = getActiveTheme($pdo);
             <div class="product-detail">
                 <div class="product-images">
                     <?php if (!empty($images)): ?>
-                        <img src="uploads/<?php echo htmlspecialchars($images[0]['image_path']); ?>" id="main-image" alt="" style="width: 100%; height: 400px; object-fit: cover; border-radius: 10px;">
+                        <img src="uploads/<?php echo htmlspecialchars($images[0]['image_path']); ?>" id="main-image" alt="<?php echo htmlspecialchars($product['name']); ?>">
                         <?php if (count($images) > 1): ?>
-                            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <div class="thumbnail-gallery">
                                 <?php foreach ($images as $img): ?>
-                                    <img src="uploads/<?php echo htmlspecialchars($img['image_path']); ?>" alt="" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px; cursor: pointer;" onclick="document.getElementById('main-image').src = this.src;">
+                                    <img src="uploads/<?php echo htmlspecialchars($img['image_path']); ?>" alt="" onclick="changeImage('uploads/<?php echo htmlspecialchars($img['image_path']); ?>')" style="cursor: pointer;">
                                 <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
@@ -82,7 +89,9 @@ $theme = getActiveTheme($pdo);
                         <input type="number" id="quantity" value="1" min="1" max="5" style="width: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; margin-left: 10px;">
                     </div>
 
-                    <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars($product['name']); ?>', <?php echo $product['price']; ?>)" style="background: var(--primary); color: white; padding: 15px 40px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; width: 100%;">Ajouter au panier</button>
+                    <button onclick="addToCart(<?php echo $product['id']; ?>, '<?php echo htmlspecialchars($product['name']); ?>', <?php echo $product['price']; ?>)" style="background: var(--primary); color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s;" onmouseover="this.style.background='var(--secondary)'" onmouseout="this.style.background='var(--primary)'">
+                        🛒 Ajouter au panier
+                    </button>
                 </div>
             </div>
         <?php else: ?>
@@ -94,6 +103,10 @@ $theme = getActiveTheme($pdo);
     </div>
 
     <script>
+        function changeImage(src) {
+            document.getElementById('main-image').src = src;
+        }
+
         function addToCart(productId, productName, price) {
             let qty = parseInt(document.getElementById('quantity').value);
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
