@@ -37,7 +37,7 @@ $theme = getActiveTheme($pdo);
 <body>
     <header class="header">
         <div class="container">
-            <a href="index.php" style="color: white; text-decoration: none; font-size: 24px;">← SUNU</a>
+            <a href="index.php" style="color: white; text-decoration: none; font-size: 24px;">← Accueil</a>
         </div>
     </header>
 
@@ -52,13 +52,13 @@ $theme = getActiveTheme($pdo);
                     <?php $images = getProductImages($pdo, $product['id']); ?>
                     <div class="product-card">
                         <?php if (!empty($images)): ?>
-                            <img src="uploads/<?php echo htmlspecialchars($images[0]['image_path']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" style="width: 100%; height: 250px; object-fit: cover;">
+                            <img src="uploads/<?php echo htmlspecialchars($images[0]['image_path']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" style="width: 100%; height: 250px; object-fit: contain; background: #f9f9f9;">
                         <?php endif; ?>
                         <div style="padding: 15px;">
                             <h3 style="color: var(--primary); margin-bottom: 5px;"><?php echo htmlspecialchars($product['name']); ?></h3>
                             <p style="color: #666; margin-bottom: 10px;"><?php echo htmlspecialchars($product['team']); ?></p>
                             <p style="color: #27ae60; font-weight: bold; margin-bottom: 15px;"><?php echo number_format($product['price'], 2); ?>€</p>
-                            <a href="product.php?id=<?php echo $product['id']; ?>" style="display: block; background: var(--primary); color: white; text-decoration: none; text-align: center; padding: 10px; border-radius: 5px;">Voir détails</a>
+                            <a href="product.php?id=<?php echo $product['id']; ?>" style="display: block; background: var(--primary); color: white; text-decoration: none; text-align: center; padding: 10px; border-radius: 5px; transition: all 0.3s;" onmouseover="this.style.background='var(--secondary)'" onmouseout="this.style.background='var(--primary)'">Voir le maillot</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
