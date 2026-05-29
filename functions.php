@@ -56,10 +56,10 @@ function getCategories($pdo, $championship_id) {
 
 function getProducts($pdo, $category_id = null) {
     if ($category_id) {
-        $stmt = $pdo->prepare("SELECT * FROM products WHERE category_id = ? ORDER BY name");
+        $stmt = $pdo->prepare("SELECT DISTINCT products.* FROM products WHERE category_id = ? ORDER BY name");
         $stmt->execute([$category_id]);
     } else {
-        $stmt = $pdo->query("SELECT * FROM products ORDER BY name");
+        $stmt = $pdo->query("SELECT DISTINCT products.* FROM products ORDER BY name");
     }
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
